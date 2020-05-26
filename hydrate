@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# ToDo: Put a progress bar and handle files that have already been processed.
+# It would be great to be able to pause the hydrator 
+
+start=`date +%s`
+
+touch "COVID-19-Tweets.csv.gz"
+
+for dir in "2020-01" "2020-02" "2020-03" "2020-04" "2020-05"
+do
+ 
+ for file in "$dir"/coronavirus*.txt
+ do
+
+  lines=$(wc -l < "$file")
+  echo "Processing $file with $lines ids."
+
+  twarc --format csv hydrate "$file" | gzip - >> "COVID-19-Tweets.csv.gz"
+
+
+ done
+
+done
+
+end=`date +%s`
+
+echo "Done! Execution time was `expr $end - $start` seconds."
